@@ -3,11 +3,22 @@ import {
   View,
   Text,
   StyleSheet,
-  Image
+  Image,
+  Dimensions
 } from "react-native";
 import {Icon, Container, Content, Header, Left, Right, Body, Button} from 'native-base';
+import CardComponent from "../CardComponent";
 
 //import EntypoIcons from 'react-native-vector-icons/Entypo';
+
+var images = [
+
+    require('../../assets/feed_images/1.jpg'),
+    require('../../assets/feed_images/2.jpg'),
+    require('../../assets/feed_images/3.png')
+];
+
+var {width, height} = Dimensions.get('window');
 
 class ProfileTab extends Component{
 
@@ -16,6 +27,63 @@ class ProfileTab extends Component{
       <Icon name="person" style={{color: tintColor}}/>
     )
 });
+  constructor(props){
+      super(props)
+
+      this.state={activeIndex:0}
+
+}
+
+    segmentClicked = (index) =>{
+      this.setState({
+        activeIndex:index
+    })
+  }
+
+    renderSectionOne = () =>{
+      return images.map((image, index)=>{
+          return(
+              <View key={index} style={[ {width:(width)/3}, {height:(width)/3}, index % 3 !==0 ? {paddingLeft:2}: {paddingLeft:0}, {marginBottom:2} ]}>
+                  <Image style={{flex:1, width:undefined, height:undefined}} source={image}></Image>
+              </View>
+          )
+      })
+    }
+
+  renderSection = () =>{
+      if (this.state.activeIndex==0){
+          return (
+              <View style={{flexDirection:'row', flexWrap:'wrap'}}>
+                  {this.renderSectionOne()}
+              </View>
+          )
+      }
+      if (this.state.activeIndex==1){
+          return (
+              <View>
+                  <CardComponent imageSource="1" likes="1000" />
+                  <CardComponent imageSource="2" likes="1000" />
+                  <CardComponent imageSource="3" likes="1000" />
+                  <CardComponent imageSource="1" likes="1000" />
+              </View>
+
+          )
+      }
+      if (this.state.activeIndex==2){
+          return (
+              <View>
+                  <Text>{this.state.activeIndex+1} section</Text>
+              </View>
+          )
+      }
+      if (this.state.activeIndex==3){
+          return (
+              <View>
+                  <Text>{this.state.activeIndex+1} section</Text>
+              </View>
+          )
+      }
+  }
 
   render() {
     return (
@@ -67,6 +135,24 @@ class ProfileTab extends Component{
                       <Text> Biografia</Text>
                       <Text> pagina personal</Text>
                   </View>
+
+                  <View>
+                      <View style={{flexDirection:'row', justifyContent:'space-around', borderTopWidth:1, borderTopColor:'#eae5e5'}}>
+                          <Button transparent onPress={()=>this.segmentClicked(0)} active={this.state.activeIndex==0}>
+                              <Icon name="ios-apps-outline" style={[this.state.activeIndex==0 ? {} : {color:'grey'}]}></Icon>
+                          </Button>
+                          <Button transparent onPress={()=>this.segmentClicked(1)} active={this.state.activeIndex==1}>
+                              <Icon name="ios-list-outline" style={[this.state.activeIndex==1 ? {} : {color:'grey'}]}></Icon>
+                          </Button>
+                          <Button transparent onPress={()=>this.segmentClicked(2)} active={this.state.activeIndex==2}>
+                              <Icon name="ios-people-outline" style={[this.state.activeIndex==2 ? {} : {color:'grey'}]}></Icon>
+                          </Button>
+                          <Button transparent onPress={()=>this.segmentClicked(3)} active={this.state.activeIndex==3}>
+                              <Icon name="ios-bookmark-outline" style={[this.state.activeIndex==3 ? {} : {color:'grey'}]}></Icon>
+                          </Button>
+                      </View>
+                  </View>
+                  {this.renderSection()}
               </View>
           </Content>
       </Container>
